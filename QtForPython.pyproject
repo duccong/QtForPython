@@ -1,0 +1,3 @@
+{
+    "files": ["qmldir","main.qml","qml/Bridge.qml","main.py","bridge.py","app.qrc"]
+}
