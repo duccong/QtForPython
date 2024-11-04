@@ -2,5 +2,9 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>qmls/Bridges.qml</file>
+        <file>qmls/BorderButton.qml</file>
+        <file>qmls/MyBorder.qml</file>
+        <file>qmls/MyTextInput.qml</file>
+        <file>qmls/Nulo.qml</file>
     </qresource>
 </RCC>

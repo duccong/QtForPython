@@ -53,43 +53,54 @@ class Worker(QThread):
         # self.signals.signal_int.connect(update_a_int_field)
 
     def run(self):
-        ssh_client = paramiko.SSHClient()
-        ssh_client.load_system_host_keys()
-        ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh_client.connect(hostname='localhost',port='2222',username='ubuntu',password='ubuntu')
-        remote_command = 'tail -f ~/Downloads/test.txt'
+        # ssh_client = paramiko.SSHClient()
+        # ssh_client.load_system_host_keys()
+        # ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        # ssh_client.connect(hostname='localhost',port='2222',username='ubuntu',password='ubuntu')
+        # remote_command = 'tail -f ~/Downloads/test.txt'
 
-        transport = ssh_client.get_transport()
-        channel = transport.open_session()
-        channel.exec_command(remote_command)
+        # transport = ssh_client.get_transport()
+        # channel = transport.open_session()
+        # channel.exec_command(remote_command)
 
         while True and (not self.isInterruptionRequested()):
-            try:
-                if channel.exit_status_ready():
-                    print("exit status ready. Maybe we're losing SSH connection")
-                    break
-                rl, wl, xl = select.select([channel], [], [], 0.0)
-                if len(rl) > 0:
-                    buf = channel.recv(1024)
-#                    print('buf:',  buf, ' > ', len(buf))
-                    LeftOver = ""
-                    if len(buf) > 0:
-                        lines_to_process = LeftOver + buf.decode()
-                        # print (line)
-                        EOL = lines_to_process.rfind("\n")
-                        if EOL != len(lines_to_process)-1:
-                            LeftOver = lines_to_process[EOL+1:]
-                            lines_to_process = lines_to_process[:EOL]
-                        else:
-                            LeftOver = ""
-                        for line in lines_to_process.splitlines():
-                            if "error" in line:
-                                print("error: ", line)
-                            print(line)
-                            self.signals.signal_str.emit(self, line)
-            except (KeyboardInterrupt, SystemExit):
-                print('got ctrl+c')
-                break
+            i = 0
+            with open('testhahaha.txt', 'w') as f:
+                f.truncate(0)
+            while i < 10:
+                i +=1
+                self.sleep(1)
+                print("i: ", i)
+                with open('testhahaha.txt', 'a') as f:
+                    f.write(str(i) + "\n")
+            f.close()
+            # break;
+#             try:
+#                 if channel.exit_status_ready():
+#                     print("exit status ready. Maybe we're losing SSH connection")
+#                     break
+#                 rl, wl, xl = select.select([channel], [], [], 0.0)
+#                 if len(rl) > 0:
+#                     buf = channel.recv(1024)
+# #                    print('buf:',  buf, ' > ', len(buf))
+#                     LeftOver = ""
+#                     if len(buf) > 0:
+#                         lines_to_process = LeftOver + buf.decode()
+#                         # print (line)
+#                         EOL = lines_to_process.rfind("\n")
+#                         if EOL != len(lines_to_process)-1:
+#                             LeftOver = lines_to_process[EOL+1:]
+#                             lines_to_process = lines_to_process[:EOL]
+#                         else:
+#                             LeftOver = ""
+#                         for line in lines_to_process.splitlines():
+#                             if "error" in line:
+#                                 print("error: ", line)
+#                             print(line)
+#                             self.signals.signal_str.emit(self, line)
+            # except (KeyboardInterrupt, SystemExit):
+            #     print('got ctrl+c')
+            #     break
         ssh_client.close()
         print('close ssh client')
         print("Thread is done")
